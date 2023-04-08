@@ -22,13 +22,14 @@ public class Spieler : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Gewinn"))
+        if (collision.gameObject.CompareTag("Gewinn"))
         {
             anzahlPunkte++;
             if (anzahlPunkte < 6)
             {
                 punkteAnzeige.text = "Punkte: " + anzahlPunkte;
-            } else
+            }
+            else
             {
                 gameObject.SetActive(false);
                 gewinn.SetActive(false);
@@ -40,9 +41,12 @@ public class Spieler : MonoBehaviour
             if (anzahlPunkte < 2)
             {
                 yNeu = -2.7f;
-            } else if (anzahlPunkte < 4) {
+            }
+            else if (anzahlPunkte < 4)
+            {
                 yNeu = 0.15f;
-            } else
+            }
+            else
             {
                 yNeu = 3;
             }
@@ -50,12 +54,19 @@ public class Spieler : MonoBehaviour
 
 
 
-        } else if (collision.gameObject.CompareTag("Gefahr"))
+        }
+        else if (collision.gameObject.CompareTag("Gefahr"))
         {
             anzahlLeben--;
             lebenAnzeige.text = "Leben: " + anzahlLeben;
             gameObject.SetActive(false);
-            Invoke (nameof(NaechstesLeben), 2);
+            if (anzahlLeben > 0) { 
+                Invoke(nameof(NaechstesLeben), 2);
+            } else
+            {
+                gewinn.SetActive(false);
+                punkteAnzeige.text = "Verloren, du versager!";
+            }
         }
 
     }
