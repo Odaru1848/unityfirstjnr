@@ -12,11 +12,21 @@ public class Spieler : MonoBehaviour
     int anzahlPunkte = 0;
     public TMP_Text punkteAnzeige;
     public TMP_Text lebenAnzeige;
+    public TMP_Text zeitAnzeige;
+    public TMP_Text zeitAltAnzeige;
     int anzahlLeben = 3;
+    bool spielGestartet = false;
+    float zeitStart;
 
     // Start is called before the first frame update
     void Start()
     {
+        float zeitAlt = 0;
+        if (PlayerPrefs.HasKey("zeitAlt"))
+        {
+            zeitAlt = PlayerPrefs.GetFloat("zeitAlt");
+            zeitAltAnzeige.text = string.Format("Alt: {0,6:0.0} sec", zeitAlt);
+        }
         lebenAnzeige.text = "Leben: " + anzahlLeben;
     }
 
@@ -34,6 +44,8 @@ public class Spieler : MonoBehaviour
                 gameObject.SetActive(false);
                 gewinn.SetActive(false);
                 punkteAnzeige.text = "Gewonnen";
+                PlayerPrefs.SetFloat("zeitAlt", Time.time - zeitStart);
+                PlayerPrefs.Save();
             }
 
             float xNeu = Random.Range(-8.0F, 8.0f);
@@ -95,6 +107,16 @@ public class Spieler : MonoBehaviour
         if (yEingabe < 0)
         {
             return;
+        }
+
+        if (!spielGestartet && (xEingabe != 0 || yEingabe != 0))
+        {
+            spielGestartet = true;
+            zeitStart = Time.time;
+        }
+        if (spielGestartet)
+        {
+            zeitAnzeige.text = string.Format("Zeit: {0,6:0.0} sec.", Time.time - zeitStart);
         }
 
         // Neue Position bestimmen
